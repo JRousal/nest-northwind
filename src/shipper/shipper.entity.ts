@@ -1,1 +1,5 @@
-export class Shipper {}
+export class Shipper {
+  id: number;
+  name: string;
+  phone: string;
+}
