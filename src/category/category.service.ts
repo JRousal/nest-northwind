@@ -3,11 +3,12 @@ import { Category } from './category.entity';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { ReplaySubject, Subject } from 'rxjs';
-import { CategoryRepository } from './category.repository';
 import { CategoryNotFoundException } from './exception/category-not-found.exception';
 import { CreateCategoryException } from './exception/create-category.exception';
 import { UpdateCategoryException } from './exception/update-category.exception';
 import { DeleteCategoryException } from './exception/delete-category.exception';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CategoryService {
@@ -15,7 +16,10 @@ export class CategoryService {
   public readonly categoryUpdated: Subject<Category>;
   public readonly categoryDeleted: Subject<Category>;
 
-  constructor(private readonly repository: CategoryRepository) {
+  constructor(
+    @InjectRepository(Category)
+    private readonly repository: Repository<Category>,
+  ) {
     this.categoryCreated = new ReplaySubject();
     this.categoryUpdated = new ReplaySubject();
     this.categoryDeleted = new ReplaySubject();
