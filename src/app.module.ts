@@ -10,9 +10,16 @@ import { SupplierModule } from './supplier/supplier.module';
 import { TerritoryModule } from './territory/territory.module';
 import { EmployeeTerritoryModule } from './employee-territory/employee-territory.module';
 import { OrderItemModule } from './order-item/order-item.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot(),
+    GraphQLModule.forRoot({
+      autoSchemaFile: 'schema.gql',
+      installSubscriptionHandlers: true,
+    }),
     CategoryModule,
     CustomerModule,
     EmployeeModule,
