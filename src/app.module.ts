@@ -15,18 +15,11 @@ import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      name: 'memory',
-      database: ':memory:',
-      dropSchema: true,
-      // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      entities: [__dirname + '/src/category/category.entity.ts'],
+    TypeOrmModule.forRoot(),
+    GraphQLModule.forRoot({
+      autoSchemaFile: 'schema.gql',
+      installSubscriptionHandlers: true,
     }),
-    // GraphQLModule.forRoot({
-    //   autoSchemaFile: 'schema.gql',
-    //   installSubscriptionHandlers: true,
-    // }),
     CategoryModule,
     CustomerModule,
     EmployeeModule,

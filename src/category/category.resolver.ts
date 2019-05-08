@@ -3,60 +3,82 @@ import { PubSub } from 'graphql-subscriptions';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Category } from './category.entity';
 
-@Resolver('Category')
+interface IPubSubTriggers {
+  readonly created: string;
+  readonly updated: string;
+  readonly deleted: string;
+}
+
+@Resolver(() => Category)
 export class CategoryResolver {
   private readonly pubSub: PubSub;
+  private readonly pubSubTriggers: IPubSubTriggers = {
+    created: 'category-created',
+    updated: 'category-updated',
+    deleted: 'category-deleted',
+  };
+
   constructor(private readonly categoryService: CategoryService) {
     this.pubSub = new PubSub();
     this.categoryService.categoryCreated.subscribe(category =>
-      this.pubSub.publish('category-created', category),
+      this.pubSub.publish(this.pubSubTriggers.created, {
+        categoryCreated: category,
+      }),
     );
     this.categoryService.categoryUpdated.subscribe(category =>
-      this.pubSub.publish('category-updated', category),
+      this.pubSub.publish(this.pubSubTriggers.updated, {
+        categoryUpdated: category,
+      }),
     );
     this.categoryService.categoryDeleted.subscribe(category =>
-      this.pubSub.publish('category-deleted', category),
+      this.pubSub.publish(this.pubSubTriggers.deleted, {
+        categoryDeleted: category,
+      }),
     );
   }
 
-  @Query()
+  @Query(() => [Category])
   async categories() {
     return await this.categoryService.find();
   }
 
-  @Query()
+  @Query(() => Category)
   async category(@Args('id') id: number) {
     return await this.categoryService.findOneById(id);
   }
 
-  @Mutation()
-  async createCategory(@Args() dto: CreateCategoryDto) {
+  @Mutation(() => Category)
+  async createCategory(@Args('params') dto: CreateCategoryDto) {
     return await this.categoryService.create(dto);
   }
 
-  @Mutation()
-  async updateCategory(@Args() id: number, @Args() dto: UpdateCategoryDto) {
+  @Mutation(() => Category)
+  async updateCategory(
+    @Args('id') id: number,
+    @Args('params') dto: UpdateCategoryDto,
+  ) {
     return await this.categoryService.update(id, dto);
   }
 
-  @Mutation()
-  async deleteCategory(@Args() id: number) {
+  @Mutation(() => Category)
+  async deleteCategory(@Args('id') id: number) {
     return await this.categoryService.delete(id);
   }
 
-  @Subscription()
+  @Subscription(() => Category)
   categoryCreated() {
-    return this.pubSub.asyncIterator('category-created');
+    return this.pubSub.asyncIterator(this.pubSubTriggers.created);
   }
 
-  @Subscription()
+  @Subscription(() => Category)
   categoryUpdated() {
-    return this.pubSub.asyncIterator('category-updated');
+    return this.pubSub.asyncIterator(this.pubSubTriggers.updated);
   }
 
-  @Subscription()
+  @Subscription(() => Category)
   categoryDeleted() {
-    return this.pubSub.asyncIterator('category-deleted');
+    return this.pubSub.asyncIterator(this.pubSubTriggers.deleted);
   }
 }
