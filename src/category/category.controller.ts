@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiUseTags, ApiNotAcceptableResponse } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import CreateCategoryDto from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
