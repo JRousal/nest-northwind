@@ -7,6 +7,7 @@
   "database": "nest_northwind",
   "synchronize": true,
   "entities": [
-    "./src/category/category.entity.ts"
+    "./src/category/category.entity.ts",
+    "./src/customer/customer.entity.ts"
   ]
 }

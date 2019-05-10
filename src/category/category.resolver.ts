@@ -1,16 +1,13 @@
 import { Resolver, Query, Args, Mutation, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
+import CreateCategoryDto from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './category.entity';
+import { Injectable } from '@nestjs/common';
+import { IPubSubTriggers } from 'src/interfaces/pub-sub-triggers.interface';
 
-interface IPubSubTriggers {
-  readonly created: string;
-  readonly updated: string;
-  readonly deleted: string;
-}
-
+@Injectable()
 @Resolver(() => Category)
 export class CategoryResolver {
   private readonly pubSub: PubSub;

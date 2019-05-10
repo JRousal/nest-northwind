@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Category } from './category.entity';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CreateCategoryDto } from './dto/create-category.dto';
+import CreateCategoryDto from './dto/create-category.dto';
 import { ReplaySubject, Subject } from 'rxjs';
 import { CategoryNotFoundException } from './exception/category-not-found.exception';
 import { CreateCategoryException } from './exception/create-category.exception';

@@ -8,11 +8,11 @@ export class Category {
   @Field()
   id: number;
 
-  @Column()
+  @Column({length: 50})
   @Field()
   name: string;
 
-  @Column()
+  @Column({length: 255})
   @Field()
   description: string;
 }
