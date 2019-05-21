@@ -1,30 +1,11 @@
-import { InputType, Field } from 'type-graphql';
-import { IsNotEmpty, Length, IsString } from 'class-validator';
-import { ApiModelProperty } from '@nestjs/swagger';
+import { InputType } from 'type-graphql';
+import { StringDtoProperty } from 'src/decorators/string-dto-property.decorator';
 
 @InputType()
 export default class CreateCategoryDto {
-  @Field()
-  @IsNotEmpty()
-  @IsString()
-  @Length(1, 100)
-  @ApiModelProperty({
-    description: 'Cateogory name',
-    required: true,
-    minLength: 1,
-    maxLength: 100,
-  })
+  @StringDtoProperty({ maxLength: 100, required: true })
   name: string;
 
-  @Field()
-  @IsNotEmpty()
-  @IsString()
-  @Length(1, 255)
-  @ApiModelProperty({
-    description: 'Category description',
-    required: true,
-    minLength: 1,
-    maxLength: 255,
-  })
+  @StringDtoProperty({ minLength: 1, required: true })
   description: string;
 }

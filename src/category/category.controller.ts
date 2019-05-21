@@ -1,26 +1,44 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiUseTags, ApiNotAcceptableResponse } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiUseTags,
+  ApiNotAcceptableResponse,
+} from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import CreateCategoryDto from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { ApiController } from 'src/decorators/api-controller.decorator';
+import { GetAllAction } from 'src/decorators/get-all-action.decorator';
+import { GetAction } from 'src/decorators/get-action.decorator';
 
-@ApiUseTags('category')
-@Controller('category')
+@ApiController()
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Get()
-  @ApiOkResponse({ isArray: true })
+  // @Get()
+  // @ApiOkResponse({ isArray: true })
+  @GetAllAction()
   async getAll() {
     return await this.categoryService.find();
   }
 
-  @Get(':id')
-  @ApiOkResponse({})
-  @ApiNotFoundResponse({
-    description: 'No category with the specified id exists.',
-  })
-
+  // @Get(':id')
+  // @ApiOkResponse({})
+  // @ApiNotFoundResponse({
+  //   description: 'No category with the specified id exists.',
+  // })
+  @GetAction(':id')
   async get(@Param('id') id: number) {
     return await this.categoryService.findOneById(id);
   }

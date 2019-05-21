@@ -1,18 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { ObjectType, Field } from 'type-graphql';
+import { StringEntityProperty } from 'src/decorators/string-entity-property.decorator';
 
 @Entity()
-@ObjectType()
 export class Category {
   @PrimaryGeneratedColumn()
-  @Field()
   id: number;
 
-  @Column({length: 50})
-  @Field()
+  @StringEntityProperty({length: 50, required: true})
   name: string;
 
-  @Column({length: 255})
-  @Field()
+  @StringEntityProperty()
   description: string;
 }

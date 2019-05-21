@@ -6,6 +6,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './category.entity';
 import { Injectable } from '@nestjs/common';
 import { IPubSubTriggers } from 'src/interfaces/pub-sub-triggers.interface';
+import { CategoryDto } from './dto/category.dto';
 
 @Injectable()
 @Resolver(() => Category)
@@ -36,22 +37,22 @@ export class CategoryResolver {
     );
   }
 
-  @Query(() => [Category])
+  @Query(() => [CategoryDto])
   async categories() {
     return await this.categoryService.find();
   }
 
-  @Query(() => Category)
+  @Query(() => CategoryDto)
   async category(@Args('id') id: number) {
     return await this.categoryService.findOneById(id);
   }
 
-  @Mutation(() => Category)
+  @Mutation(() => CategoryDto)
   async createCategory(@Args('params') dto: CreateCategoryDto) {
     return await this.categoryService.create(dto);
   }
 
-  @Mutation(() => Category)
+  @Mutation(() => CategoryDto)
   async updateCategory(
     @Args('id') id: number,
     @Args('params') dto: UpdateCategoryDto,
@@ -59,22 +60,22 @@ export class CategoryResolver {
     return await this.categoryService.update(id, dto);
   }
 
-  @Mutation(() => Category)
+  @Mutation(() => CategoryDto)
   async deleteCategory(@Args('id') id: number) {
     return await this.categoryService.delete(id);
   }
 
-  @Subscription(() => Category)
+  @Subscription(() => CategoryDto)
   categoryCreated() {
     return this.pubSub.asyncIterator(this.pubSubTriggers.created);
   }
 
-  @Subscription(() => Category)
+  @Subscription(() => CategoryDto)
   categoryUpdated() {
     return this.pubSub.asyncIterator(this.pubSubTriggers.updated);
   }
 
-  @Subscription(() => Category)
+  @Subscription(() => CategoryDto)
   categoryDeleted() {
     return this.pubSub.asyncIterator(this.pubSubTriggers.deleted);
   }

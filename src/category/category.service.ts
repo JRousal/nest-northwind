@@ -9,12 +9,13 @@ import { UpdateCategoryException } from './exception/update-category.exception';
 import { DeleteCategoryException } from './exception/delete-category.exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CategoryDto } from './dto/category.dto';
 
 @Injectable()
 export class CategoryService {
-  public readonly categoryCreated: Subject<Category>;
-  public readonly categoryUpdated: Subject<Category>;
-  public readonly categoryDeleted: Subject<Category>;
+  public readonly categoryCreated: Subject<CategoryDto>;
+  public readonly categoryUpdated: Subject<CategoryDto>;
+  public readonly categoryDeleted: Subject<CategoryDto>;
 
   constructor(
     @InjectRepository(Category)
@@ -25,41 +26,45 @@ export class CategoryService {
     this.categoryDeleted = new ReplaySubject();
   }
 
-  async find(): Promise<Category[]> {
-    return await this.repository.find();
+  async find(): Promise<CategoryDto[]> {
+    const categories = await this.repository.find();
+    const items = categories.map(category => new CategoryDto(category));
+    return items;
   }
 
-  async findOneById(id: number): Promise<Category> {
+  async findOneById(id: number): Promise<CategoryDto> {
     const category = await this.repository.findOne(id);
     if (!category) {
       throw new CategoryNotFoundException(id);
     }
-    return category;
+    return new CategoryDto(category);
   }
 
-  async create(dto: CreateCategoryDto): Promise<Category> {
+  async create(dto: CreateCategoryDto): Promise<CategoryDto> {
     try {
       const category = this.repository.create({ ...dto });
       await this.repository.insert(category);
-      this.categoryCreated.next(category);
-      return category;
+      const categoryDto = new CategoryDto(category);
+      this.categoryCreated.next(categoryDto);
+      return categoryDto;
     } catch (error) {
       throw new CreateCategoryException(error);
     }
   }
 
-  async update(id: number, dto: UpdateCategoryDto): Promise<Category> {
+  async update(id: number, dto: UpdateCategoryDto): Promise<CategoryDto> {
     try {
       await this.repository.update(id, { ...dto });
       const category = await this.findOneById(id);
-      this.categoryUpdated.next(category);
-      return category;
+      const categoryDto = new CategoryDto(category);
+      this.categoryUpdated.next(categoryDto);
+      return categoryDto;
     } catch (error) {
       throw new UpdateCategoryException(id, error);
     }
   }
 
-  async delete(id: number): Promise<Category> {
+  async delete(id: number): Promise<CategoryDto> {
     try {
       const category = await this.findOneById(id);
       await this.repository.delete(id);
