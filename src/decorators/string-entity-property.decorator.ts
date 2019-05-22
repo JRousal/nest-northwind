@@ -17,9 +17,9 @@ const applyDefaultOptions = (opts: StringEntityPropertyOptions = {}) => {
   return options;
 };
 
-export const StringEntityProperty: PropertyDecorator = (
+export const StringEntityProperty = (
   opts: StringEntityPropertyOptions = {},
-) => (target: any, key: string) => {
+): PropertyDecorator => (target: any, key: string) => {
   const options = applyDefaultOptions(opts);
   Column({ nullable: !options.required, length: options.length })(target, key);
 };

@@ -6,7 +6,7 @@ interface GetAllActionDecoratorOptions {}
 export const GetAllAction = (
   options: GetAllActionDecoratorOptions = {},
 ): MethodDecorator => (
-  target: any,
+  target: object,
   key: string,
   descriptor: PropertyDescriptor,
 ) => {
